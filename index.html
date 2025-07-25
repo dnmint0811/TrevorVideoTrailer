@@ -1,31 +1,47 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Video Trailer</title>
+  <title>Video with Tap-to-Unmute</title>
   <style>
     * { margin: 0; padding: 0; }
     html, body {
       height: 100%;
       overflow: hidden;
       background: black;
+      touch-action: manipulation;
     }
     video {
       width: 100vw;
       height: 100vh;
       object-fit: fill;
       position: fixed;
-      top: 0; left: 0;
+      top: 0;
+      left: 0;
     }
   </style>
 </head>
 <body>
-  <video 
-    src="https://github.com/dnmint0811/TrevorVideoTrailer/releases/download/1/video.mp4" 
-    autoplay 
-    muted 
-    loop 
-    playsinline>
+  <video id="video" autoplay muted loop playsinline>
+    <source src="https://github.com/user-attachments/assets/75c687e4-2379-4937-9880-6d72c1b4659f" type="video/mp4">
   </video>
+
+  <script>
+    const video = document.getElementById('video');
+
+    // Khi người dùng chạm hoặc click → bật tiếng
+    const enableAudio = () => {
+      video.muted = false;
+      video.play();
+      // Chỉ cần làm 1 lần
+      document.removeEventListener('click', enableAudio);
+      document.removeEventListener('touchstart', enableAudio);
+    };
+
+    document.addEventListener('click', enableAudio);
+    document.addEventListener('touchstart', enableAudio);
+  </script>
 </body>
 </html>
