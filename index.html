@@ -1,10 +1,8 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Video with Tap-to-Unmute</title>
+  <title>Video Fullscreen with Overlay Fix</title>
   <style>
     * { margin: 0; padding: 0; }
     html, body {
@@ -20,25 +18,43 @@
       position: fixed;
       top: 0;
       left: 0;
+      z-index: 1;
+    }
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      z-index: 2;
     }
   </style>
 </head>
 <body>
+  <!-- Lớp phủ để che icon Play mặc định -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Video auto-play -->
   <video id="video" autoplay muted loop playsinline>
     <source src="https://github.com/user-attachments/assets/75c687e4-2379-4937-9880-6d72c1b4659f" type="video/mp4">
   </video>
 
   <script>
     const video = document.getElementById('video');
+    const overlay = document.getElementById('overlay');
 
-    // Khi người dùng chạm hoặc click → bật tiếng
+    // Khi người dùng chạm → bỏ mute và play lại
     const enableAudio = () => {
       video.muted = false;
       video.play();
-      // Chỉ cần làm 1 lần
       document.removeEventListener('click', enableAudio);
       document.removeEventListener('touchstart', enableAudio);
     };
+
+    // Khi video bắt đầu phát → ẩn lớp phủ
+    video.addEventListener('canplay', () => {
+      overlay.style.display = 'none';
+    });
 
     document.addEventListener('click', enableAudio);
     document.addEventListener('touchstart', enableAudio);
