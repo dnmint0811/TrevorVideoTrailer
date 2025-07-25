@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Video Fullscreen with Overlay Fix</title>
+  <title>Video Intro with Strong 3D Glow Button</title>
   <style>
-    * { margin: 0; padding: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       height: 100%;
-      overflow: hidden;
       background: black;
+      overflow: hidden;
       touch-action: manipulation;
     }
+
     video {
       width: 100vw;
       height: 100vh;
@@ -20,6 +21,7 @@
       left: 0;
       z-index: 1;
     }
+
     .overlay {
       position: fixed;
       top: 0; left: 0;
@@ -28,22 +30,57 @@
       background: black;
       z-index: 2;
     }
+
+    .white-button-bg {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 50px;
+      border-radius: 16px;
+      z-index: 3;
+
+      background: linear-gradient(to bottom, #ffffff, #cccccc);
+      border-top: 2px solid #ffffff;
+      border-bottom: 2px solid #999999;
+
+      /* Tăng glow lại và thêm chiều sâu bằng inset */
+      box-shadow:
+        inset 0 2px 4px rgba(255, 255, 255, 0.6),    /* ánh sáng hắt trên */
+        inset 0 -3px 6px rgba(0, 0, 0, 0.3),         /* bóng ở dưới */
+        0 0 16px 4px rgba(0, 255, 255, 0.5);         /* glow */
+
+      animation: glowPulse 1.8s infinite ease-in-out;
+    }
+
+    @keyframes glowPulse {
+      0%   { box-shadow: inset 0 2px 4px rgba(255,255,255,0.6), inset 0 -3px 6px rgba(0,0,0,0.3), 0 0 12px 3px rgba(0,255,255,0.4); }
+      25%  { box-shadow: inset 0 2px 4px rgba(255,255,255,0.6), inset 0 -3px 6px rgba(0,0,0,0.3), 0 0 16px 5px rgba(255,0,255,0.4); }
+      50%  { box-shadow: inset 0 2px 4px rgba(255,255,255,0.6), inset 0 -3px 6px rgba(0,0,0,0.3), 0 0 20px 6px rgba(0,255,0,0.4); }
+      75%  { box-shadow: inset 0 2px 4px rgba(255,255,255,0.6), inset 0 -3px 6px rgba(0,0,0,0.3), 0 0 16px 5px rgba(255,204,0,0.4); }
+      100% { box-shadow: inset 0 2px 4px rgba(255,255,255,0.6), inset 0 -3px 6px rgba(0,0,0,0.3), 0 0 12px 3px rgba(0,255,255,0.4); }
+    }
   </style>
 </head>
 <body>
-  <!-- Lớp phủ để che icon Play mặc định -->
+
   <div class="overlay" id="overlay"></div>
 
-  <!-- Video auto-play -->
   <video id="video" autoplay muted loop playsinline>
     <source src="https://github.com/user-attachments/assets/75c687e4-2379-4937-9880-6d72c1b4659f" type="video/mp4">
   </video>
+
+  <div class="white-button-bg"></div>
 
   <script>
     const video = document.getElementById('video');
     const overlay = document.getElementById('overlay');
 
-    // Khi người dùng chạm → bỏ mute và play lại
+    video.addEventListener('canplay', () => {
+      overlay.style.display = 'none';
+    });
+
     const enableAudio = () => {
       video.muted = false;
       video.play();
@@ -51,13 +88,9 @@
       document.removeEventListener('touchstart', enableAudio);
     };
 
-    // Khi video bắt đầu phát → ẩn lớp phủ
-    video.addEventListener('canplay', () => {
-      overlay.style.display = 'none';
-    });
-
     document.addEventListener('click', enableAudio);
     document.addEventListener('touchstart', enableAudio);
   </script>
+
 </body>
 </html>
